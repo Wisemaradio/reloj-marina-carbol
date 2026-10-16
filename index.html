@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Marina Stereo 91.7 FM</title>
+
+<style>
+
+/* =====================================================
+   BASE
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f8fafc;
+
+    color: #163653;
+}
+
+
+/* =====================================================
+   FONDO
+===================================================== */
+
+.pantalla {
+
+    position: relative;
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(20,125,210,.055),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(0,75,150,.045),
+            transparent 28%
+        ),
+
+        #f8fafc;
+}
+
+
+/* =====================================================
+   LÍNEAS ELEGANTES DEL FONDO
+===================================================== */
+
+.lineas-fondo {
+
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    opacity: .55;
+}
+
+.linea {
+
+    position: absolute;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(20,100,170,.13),
+            transparent
+        );
+
+    transform: rotate(-18deg);
+}
+
+.linea:nth-child(1) {
+
+    width: 75%;
+
+    top: 15%;
+    left: -10%;
+}
+
+.linea:nth-child(2) {
+
+    width: 65%;
+
+    top: 30%;
+    right: -8%;
+
+    transform: rotate(17deg);
+}
+
+.linea:nth-child(3) {
+
+    width: 80%;
+
+    top: 52%;
+    left: -15%;
+}
+
+.linea:nth-child(4) {
+
+    width: 60%;
+
+    top: 68%;
+    right: -5%;
+
+    transform: rotate(15deg);
+}
+
+.linea:nth-child(5) {
+
+    width: 70%;
+
+    top: 84%;
+    left: -10%;
+}
+
+.linea:nth-child(6) {
+
+    width: 45%;
+
+    top: 43%;
+    right: -5%;
+
+    transform: rotate(-14deg);
+}
+
+
+/* =====================================================
+   CÍRCULOS DECORATIVOS
+===================================================== */
+
+.circulo {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(0,91,170,.07);
+}
+
+.c1 {
+
+    width: 35vw;
+    height: 35vw;
+
+    top: -20vw;
+    right: -8vw;
+}
+
+.c2 {
+
+    width: 28vw;
+    height: 28vw;
+
+    bottom: -18vw;
+    left: -8vw;
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.superior {
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    height: 18vh;
+
+    padding:
+        3vh
+        5vw;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    z-index: 10;
+}
+
+
+/* =====================================================
+   LOGO SUPERIOR
+===================================================== */
+
+.logo-superior {
+
+    width: 15vw;
+
+    max-width: 220px;
+    min-width: 130px;
+
+    height: auto;
+
+    object-fit: contain;
+}
+
+
+/* =====================================================
+   FRECUENCIA + PANTALLA COMPLETA
+===================================================== */
+
+.frecuencia-contenedor {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 1.4vw;
+}
+
+.frecuencia {
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: .7vw;
+
+    color: #123d63;
+}
+
+.numero {
+
+    font-size: 5vw;
+
+    font-weight: 700;
+
+    letter-spacing: -2px;
+}
+
+.fm {
+
+    font-size: 1.9vw;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   BOTÓN PANTALLA COMPLETA
+===================================================== */
+
+#boton-fullscreen {
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid
+        rgba(18,61,99,.22);
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.65);
+
+    color: #123d63;
+
+    font-size: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity .3s ease,
+        transform .2s ease,
+        background .2s ease;
+
+    z-index: 100;
+}
+
+#boton-fullscreen:hover {
+
+    background:
+        rgba(255,255,255,.95);
+
+    transform: scale(1.08);
+}
+
+
+/* El botón aparece cuando hay movimiento */
+
+.mostrar-controles #boton-fullscreen {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+/* =====================================================
+   MODO PANTALLA COMPLETA
+===================================================== */
+
+body.pantalla-completa
+#boton-fullscreen {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+/* =====================================================
+   EN VIVO
+===================================================== */
+
+.en-vivo {
+
+    position: absolute;
+
+    top: 4vh;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #bd2630;
+
+    font-size: 1vw;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    z-index: 20;
+}
+
+.punto {
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #d92532;
+
+    animation:
+        pulso
+        1.5s
+        infinite;
+}
+
+@keyframes pulso {
+
+    0%,
+    100% {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+
+    50% {
+
+        opacity: .35;
+
+        transform:
+            scale(.7);
+    }
+}
+
+
+/* =====================================================
+   CONTENIDO CENTRAL
+===================================================== */
+
+.contenido {
+
+    position: absolute;
+
+    top: 18vh;
+    left: 0;
+
+    width: 100%;
+
+    height: 66vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 5;
+}
+
+
+/* =====================================================
+   RELOJ
+===================================================== */
+
+.reloj {
+
+    width: 60%;
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 5;
+}
+
+#hora {
+
+    font-size: 10.5vw;
+
+    font-weight: 300;
+
+    letter-spacing: .015em;
+
+    line-height: 1;
+
+    color: #173b5c;
+
+    text-shadow:
+        0 2px 10px
+        rgba(20,70,110,.05);
+}
+
+#fecha {
+
+    margin-top: 2.8vh;
+
+    font-size: 2vw;
+
+    color: #60798d;
+
+    text-transform: capitalize;
+}
+
+
+/* =====================================================
+   ÁREA VISUAL
+===================================================== */
+
+.visual {
+
+    width: 40%;
+
+    height: 82%;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   ONDA SONORA DECORATIVA
+===================================================== */
+
+.onda {
+
+    position: absolute;
+
+    width: 100%;
+    height: 45%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    opacity: .10;
+
+    z-index: 1;
+}
+
+.onda span {
+
+    width: 6px;
+
+    border-radius: 20px;
+
+    background: #087bd3;
+
+    animation:
+        onda
+        2.4s
+        ease-in-out
+        infinite;
+}
+
+.onda span:nth-child(1) {
+    height: 20%;
+    animation-delay: -.2s;
+}
+
+.onda span:nth-child(2) {
+    height: 35%;
+    animation-delay: -.4s;
+}
+
+.onda span:nth-child(3) {
+    height: 50%;
+    animation-delay: -.6s;
+}
+
+.onda span:nth-child(4) {
+    height: 70%;
+    animation-delay: -.8s;
+}
+
+.onda span:nth-child(5) {
+    height: 88%;
+    animation-delay: -1s;
+}
+
+.onda span:nth-child(6) {
+    height: 100%;
+    animation-delay: -1.2s;
+}
+
+.onda span:nth-child(7) {
+    height: 88%;
+    animation-delay: -1s;
+}
+
+.onda span:nth-child(8) {
+    height: 70%;
+    animation-delay: -.8s;
+}
+
+.onda span:nth-child(9) {
+    height: 50%;
+    animation-delay: -.6s;
+}
+
+.onda span:nth-child(10) {
+    height: 35%;
+    animation-delay: -.4s;
+}
+
+.onda span:nth-child(11) {
+    height: 20%;
+    animation-delay: -.2s;
+}
+
+@keyframes onda {
+
+    0%,
+    100% {
+
+        transform:
+            scaleY(.75);
+    }
+
+    50% {
+
+        transform:
+            scaleY(1.08);
+    }
+}
+
+
+/* =====================================================
+   CONTENEDOR DE IMAGEN
+===================================================== */
+
+.contenedor-imagen {
+
+    position: relative;
+
+    width: 90%;
+    height: 90%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 3;
+}
+
+
+/* =====================================================
+   IMAGEN MARINA
+===================================================== */
+
+#imagen-marina {
+
+    max-width: 100%;
+    max-height: 100%;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+
+/* =====================================================
+   LOGO PNG
+   MÁS GRANDE Y SIN BISEL
+===================================================== */
+
+#imagen-marina.logo-png {
+
+    width: 108%;
+
+    max-width: 108%;
+
+    max-height: 108%;
+
+    filter: none;
+
+    border: none;
+
+    border-radius: 0;
+
+    box-shadow: none;
+}
+
+
+/* =====================================================
+   PENDÓN JPG
+   BORDE ELEGANTE
+===================================================== */
+
+#imagen-marina.logo-pendon {
+
+    max-width: 100%;
+    max-height: 100%;
+
+    border-radius: 18px;
+
+    filter:
+        drop-shadow(
+            0 10px 25px
+            rgba(0,50,100,.13)
+        );
+}
+
+
+/* =====================================================
+   TRANSICIÓN
+===================================================== */
+
+.oculta {
+
+    opacity: 0;
+
+    transform:
+        scale(.94);
+}
+
+
+/* =====================================================
+   LÍNEA CENTRAL
+===================================================== */
+
+.divisor {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 23vh;
+
+    width: 1px;
+
+    height: 52vh;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(20,100,160,.12),
+            transparent
+        );
+
+    z-index: 2;
+}
+
+
+/* =====================================================
+   PARTE INFERIOR
+===================================================== */
+
+.inferior {
+
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+
+    height: 16vh;
+
+    border-top:
+        1px solid
+        rgba(30,80,120,.13);
+
+    padding:
+        2vh
+        5vw;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    z-index: 10;
+}
+
+
+/* =====================================================
+   IDENTIDAD
+===================================================== */
+
+.identidad {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.identidad strong {
+
+    font-size: 1.45vw;
+
+    letter-spacing: 1px;
+
+    color: #153e60;
+}
+
+.identidad span {
+
+    font-size: 1.05vw;
+
+    color: #6d8292;
+}
+
+
+/* =====================================================
+   UBICACIÓN
+===================================================== */
+
+.ubicacion {
+
+    display: flex;
+
+    flex-direction: column;
+
+    text-align: center;
+
+    gap: 5px;
+}
+
+.ubicacion strong {
+
+    font-size: 1.3vw;
+
+    color: #153e60;
+}
+
+.ubicacion span {
+
+    font-size: 1vw;
+
+    color: #718595;
+}
+
+
+/* =====================================================
+   WEB
+===================================================== */
+
+.web {
+
+    font-size: 1.15vw;
+
+    font-weight: 600;
+
+    color: #153e60;
+}
+
+
+/* =====================================================
+   LÍNEA INFERIOR MARINA
+===================================================== */
+
+.linea-azul {
+
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+
+    height: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #063b78,
+            #087bd9,
+            #063b78
+        );
+
+    z-index: 30;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .superior {
+
+        height: 16vh;
+    }
+
+    .logo-superior {
+
+        width: 24vw;
+    }
+
+    .numero {
+
+        font-size: 8vw;
+    }
+
+    .fm {
+
+        font-size: 3vw;
+    }
+
+    .en-vivo {
+
+        font-size: 2vw;
+    }
+
+    #boton-fullscreen {
+
+        width: 36px;
+        height: 36px;
+
+        font-size: 19px;
+    }
+
+    .contenido {
+
+        top: 16vh;
+
+        height: 69vh;
+
+        flex-direction: column;
+    }
+
+    .reloj {
+
+        width: 100%;
+    }
+
+    #hora {
+
+        font-size: 15vw;
+    }
+
+    #fecha {
+
+        font-size: 3.5vw;
+    }
+
+    .visual {
+
+        width: 65%;
+
+        height: 35%;
+    }
+
+    .divisor {
+
+        display: none;
+    }
+
+    .inferior {
+
+        height: 15vh;
+    }
+
+    .identidad strong,
+    .ubicacion strong {
+
+        font-size: 2.6vw;
+    }
+
+    .identidad span,
+    .ubicacion span,
+    .web {
+
+        font-size: 2vw;
+    }
+
+    #imagen-marina.logo-png {
+
+        width: 108%;
+
+        max-width: 108%;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="pantalla">
+
+
+    <!-- =================================================
+         FONDO
+    ================================================== -->
+
+    <div class="lineas-fondo">
+
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+        <div class="linea"></div>
+
+        <div class="circulo c1"></div>
+        <div class="circulo c2"></div>
+
+    </div>
+
+
+    <!-- =================================================
+         EN VIVO
+    ================================================== -->
+
+    <div class="en-vivo">
+
+        <span class="punto"></span>
+
+        EN VIVO
+
+    </div>
+
+
+    <!-- =================================================
+         CABECERA
+    ================================================== -->
+
+    <header class="superior">
+
+
+        <!-- LOGO -->
+
+        <img
+            src="imagenes/LOGO.png"
+            alt="Marina Stereo"
+            class="logo-superior"
+        >
+
+
+        <!-- FRECUENCIA + BOTÓN -->
+
+        <div class="frecuencia-contenedor">
+
+
+            <div class="frecuencia">
+
+                <span class="numero">
+                    91.7
+                </span>
+
+                <span class="fm">
+                    FM
+                </span>
+
+            </div>
+
+
+            <button
+                id="boton-fullscreen"
+                title="Pantalla completa"
+                aria-label="Pantalla completa"
+            >
+                ⛶
+            </button>
+
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================================
+         DIVISOR
+    ================================================== -->
+
+    <div class="divisor"></div>
+
+
+    <!-- =================================================
+         CONTENIDO
+    ================================================== -->
+
+    <main class="contenido">
+
+
+        <!-- RELOJ -->
+
+        <section class="reloj">
+
+            <div id="hora">
+                00:00:00
+            </div>
+
+            <div id="fecha">
+                Cargando fecha...
+            </div>
+
+        </section>
+
+
+        <!-- VISUAL -->
+
+        <section class="visual">
+
+
+            <!-- ONDA -->
+
+            <div class="onda">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+
+            <!-- IMAGEN -->
+
+            <div class="contenedor-imagen">
+
+                <img
+                    id="imagen-marina"
+                    src="imagenes/LOGO.png"
+                    alt="Marina Stereo"
+                    class="logo-png"
+                >
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =================================================
+         PARTE INFERIOR
+    ================================================== -->
+
+    <footer class="inferior">
+
+
+        <div class="identidad">
+
+            <strong>
+                MARINA STEREO
+            </strong>
+
+            <span>
+                La Radio de la Gente
+            </span>
+
+        </div>
+
+
+        <div class="ubicacion">
+
+            <strong>
+                CARMEN DE BOLÍVAR
+            </strong>
+
+            <span>
+                Colombia
+            </span>
+
+        </div>
+
+
+        <div class="web">
+
+            www.marinastereo.com
+
+        </div>
+
+
+    </footer>
+
+
+    <!-- =================================================
+         LÍNEA INFERIOR
+    ================================================== -->
+
+    <div class="linea-azul"></div>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   RELOJ COLOMBIA
+===================================================== */
+
+function actualizarReloj() {
+
+    const ahora = new Date();
+
+
+    const hora = new Intl.DateTimeFormat(
+
+        "es-CO",
+
+        {
+
+            timeZone:
+                "America/Bogota",
+
+            hour:
+                "2-digit",
+
+            minute:
+                "2-digit",
+
+            second:
+                "2-digit",
+
+            hour12:
+                false
+        }
+
+    ).format(ahora);
+
+
+    const fecha = new Intl.DateTimeFormat(
+
+        "es-CO",
+
+        {
+
+            timeZone:
+                "America/Bogota",
+
+            weekday:
+                "long",
+
+            day:
+                "numeric",
+
+            month:
+                "long",
+
+            year:
+                "numeric"
+        }
+
+    ).format(ahora);
+
+
+    document.getElementById("hora")
+        .textContent = hora;
+
+
+    document.getElementById("fecha")
+        .textContent = fecha;
+
+}
+
+
+actualizarReloj();
+
+
+setInterval(
+    actualizarReloj,
+    1000
+);
+
+
+/* =====================================================
+   ROTACIÓN DE IMÁGENES
+===================================================== */
+
+const imagenes = [
+
+    {
+        src:
+            "imagenes/LOGO.png",
+
+        clase:
+            "logo-png"
+    },
+
+    {
+        src:
+            "imagenes/logo-pendon.jpg",
+
+        clase:
+            "logo-pendon"
+    }
+
+];
+
+
+let posicion = 0;
+
+
+const imagen =
+    document.getElementById(
+        "imagen-marina"
+    );
+
+
+function cambiarImagen() {
+
+    imagen.classList.add(
+        "oculta"
+    );
+
+
+    setTimeout(() => {
+
+
+        posicion++;
+
+
+        if (
+            posicion >=
+            imagenes.length
+        ) {
+
+            posicion = 0;
+
+        }
+
+
+        imagen.src =
+            imagenes[posicion].src;
+
+
+        imagen.className =
+            imagenes[posicion].clase;
+
+
+        imagen.classList.add(
+            "oculta"
+        );
+
+
+        setTimeout(() => {
+
+            imagen.classList.remove(
+                "oculta"
+            );
+
+        }, 50);
+
+
+    }, 1000);
+
+}
+
+
+setInterval(
+    cambiarImagen,
+    8000
+);
+
+
+/* =====================================================
+   PANTALLA COMPLETA
+===================================================== */
+
+const botonFullscreen =
+    document.getElementById(
+        "boton-fullscreen"
+    );
+
+
+async function alternarPantallaCompleta() {
+
+    try {
+
+        if (!document.fullscreenElement) {
+
+            await document.documentElement
+                .requestFullscreen();
+
+            document.body.classList.add(
+                "pantalla-completa"
+            );
+
+        } else {
+
+            await document.exitFullscreen();
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Pantalla completa no disponible:",
+            error
+        );
+
+    }
+
+}
+
+
+botonFullscreen.addEventListener(
+    "click",
+    alternarPantallaCompleta
+);
+
+
+/* =====================================================
+   ACTUALIZAR ESTADO DE PANTALLA COMPLETA
+===================================================== */
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        if (document.fullscreenElement) {
+
+            document.body.classList.add(
+                "pantalla-completa"
+            );
+
+        } else {
+
+            document.body.classList.remove(
+                "pantalla-completa"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   OCULTAR CONTROLES AUTOMÁTICAMENTE
+===================================================== */
+
+let temporizadorControles;
+
+
+function mostrarControles() {
+
+    document.body.classList.add(
+        "mostrar-controles"
+    );
+
+
+    clearTimeout(
+        temporizadorControles
+    );
+
+
+    temporizadorControles =
+        setTimeout(() => {
+
+            if (
+                document.fullscreenElement
+            ) {
+
+                document.body.classList.remove(
+                    "mostrar-controles"
+                );
+
+            }
+
+        }, 2500);
+
+}
+
+
+/* =====================================================
+   MOVIMIENTO DEL MOUSE / CONTROL
+===================================================== */
+
+document.addEventListener(
+    "mousemove",
+    mostrarControles
+);
+
+
+document.addEventListener(
+    "mouseenter",
+    mostrarControles
+);
+
+
+/* =====================================================
+   TECLADO / CONTROL REMOTO
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    mostrarControles
+);
+
+
+/* =====================================================
+   AL ENTRAR A PANTALLA COMPLETA
+===================================================== */
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        if (
+            document.fullscreenElement
+        ) {
+
+            mostrarControles();
+
+        } else {
+
+            document.body.classList.add(
+                "mostrar-controles"
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+</html>
